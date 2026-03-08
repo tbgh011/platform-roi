@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrast Runtime Platform ROI Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1.5rem; }
+        .input-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.25rem; }
+        input { width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; }
+        .result-val { font-weight: bold; color: #1e40af; }
+
+        @media print {
+            @page { margin: 0.3cm; size: auto; }
+            body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            .no-print { display: none !important; }
+            
+            /* Strategic scaling to accommodate the full reference text */
+            .max-w-5xl { 
+                max-width: 100% !important; 
+                width: 100% !important; 
+                transform: scale(0.76); 
+                transform-origin: top center; 
+            }
+            
+            .card { box-shadow: none !important; border: 1px solid #eee; break-inside: avoid; margin-bottom: 0.75rem; }
+            input { border: none !important; font-weight: bold; padding: 0 !important; background: transparent !important; }
+            .grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 1.5rem !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-900">Contrast Runtime Platform ROI</h1>
+            <p class="text-gray-600">Unified ROI for AppSec and SOC Operations</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div class="card border-t-4 border-gray-400">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2">1. Organization Baseline</h2>
+                    <div class="input-group">
+                        <label>Total Number of Applications</label>
+                        <input type="number" id="numApps" value="50" oninput="calculate()">
+                    </div>
+                    <div class="input-group">
+                        <label>Average Hourly Rate (AppSec/SOC) $</label>
+                        <input type="number" id="hourlyRate" value="100" oninput="calculate()">
+                    </div>
+                    <div class="input-group">
+                        <label>Contrast Platform Annual Cost $</label>
+                        <input type="number" id="platformCost" value="75000" oninput="calculate()">
+                    </div>
+                </div>
+
+                <div class="card border-t-4 border-blue-600">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2 text-blue-700">2. AppSec Metrics</h2>
+                    <div class="input-group">
+                        <label>Avg. True Vulns per App/Year</label>
+                        <input type="number" id="astVulns" value="130" oninput="calculate()">
+                    </div>
+                    <div class="input-group">
+                        <label>Minutes to Triage (Legacy Tools)</label>
+                        <input type="number" id="astTriageTime" value="25" oninput="calculate()">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="input-group">
+                            <label>Legacy FP Rate %</label>
+                            <input type="number" id="legacyFp" value="40" oninput="calculate()">
+                        </div>
+                        <div class="input-group">
+                            <label>Contrast FP Rate %</label>
+                            <input type="number" id="contrastFp" value="1" oninput="calculate()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-t-4 border-orange-600">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2 text-orange-700">3. SOC Metrics</h2>
+                    <div class="input-group">
+                        <label>Annual App-Layer Incidents/Alerts</label>
+                        <input type="number" id="adrIncidents" value="1200" oninput="calculate()">
+                    </div>
+                    <div class="input-group">
+                        <label>Mins to Verify/Triage (Legacy)</label>
+                        <input type="number" id="adrLegacyTime" value="45" oninput="calculate()">
+                    </div>
+                    <div class="input-group">
+                        <label>Mins to Verify/Triage (Contrast)</label>
+                        <input type="number" id="adrContrastTime" value="5" oninput="calculate()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="card bg-blue-900 text-white">
+                    <h2 class="text-xl font-bold mb-4 opacity-80 uppercase tracking-wide">Executive Summary</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm opacity-80">Total Annual Savings (Gross)</p>
+                            <p class="text-4xl font-bold" id="totalSavings">$0</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 border-t border-blue-700 pt-4">
+                            <div>
+                                <p class="text-xs opacity-80">Net Benefit (Profit)</p>
+                                <p class="text-xl font-bold" id="netBenefit">$0</p>
+                            </div>
+                            <div>
+                                <p class="text-xs opacity-80">Platform ROI</p>
+                                <p class="text-xl font-bold text-green-400" id="roi">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="text-lg font-bold mb-4 border-b pb-2 text-gray-800">Operational Impact</h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span>AppSec Hours Reclaimed:</span>
+                            <span class="result-val" id="astHours">0</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>SOC Hours Reclaimed:</span>
+                            <span class="result-val" id="adrHours">0</span>
+                        </div>
+                        <div class="flex justify-between border-t pt-2 font-bold">
+                            <span>Total FTE Time Recovered:</span>
+                            <span class="result-val text-green-600 text-lg" id="totalFte">0.0 FTEs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-gray-50 border border-gray-200">
+                    <h3 class="font-bold text-gray-800 mb-3 text-sm uppercase border-b pb-1">Metric Definitions & Logic</h3>
+                    <div class="text-[11px] space-y-3 text-gray-700 leading-normal">
+                        <p><strong>Avg. True Vulns:</strong> The number of unique, valid security flaws (e.g., SQLi, XSS) found in an application’s code or dependencies annually that require remediation.</p>
+                        <p><strong>Minutes to Triage:</strong> The time spent by a developer or AppSec engineer to open a ticket, investigate the code, and determine if a finding is a "True Positive" or a "False Positive."</p>
+                        <p><strong>App-Layer Incidents:</strong> Telemetry/alerts specifically targeting the application stack rather than network-level noise (e.g., port scans).</p>
+                        <p><strong>Mins to Verify/Triage:</strong> The duration from the moment a SOC alert fires to the point an analyst confirms it was a successful exploit attempt vs. a blocked/irrelevant probe.</p>
+                    </div>
+                </div>
+
+                <div class="card bg-gray-50 border border-gray-200">
+                    <h3 class="font-bold text-gray-800 mb-3 text-sm uppercase border-b pb-1">Industry Benchmarks & References</h3>
+                    <div class="text-[11px] space-y-2 text-gray-600 leading-normal">
+                        <p><strong>• True Vulns/App (130):</strong> Based on <em>Veracode State of Software Security (SoSS)</em> averages for active enterprise application profiles.</p>
+                        <p><strong>• Triage Time (25m) & FP Rate (40%):</strong> Industry aggregate for legacy SAST/DAST tools (ref: <em>ESG/Ponemon Institute</em> AppSec productivity studies).</p>
+                        <p><strong>• SOC Incident Volume (1200):</strong> Estimated application-specific alerts for a 50-app environment (ref: <em>Verizon DBIR</em> and <em>IBM Cost of Data Breach</em> telemetry ratios).</p>
+                        <p><strong>• SOC Verify (45m):</strong> Standard analyst "Mean Time to Respond" (MTTR) for uncontextualized web alerts (ref: <em>SANS Institute</em> SOC Survey results).</p>
+                    </div>
+                </div>
+
+                <div class="card border-l-4 border-blue-500 bg-blue-50 py-3">
+                    <h3 class="font-bold text-gray-800 mb-1 text-sm">CISO Perspective:</h3>
+                    <p class="text-xs text-gray-600 italic leading-relaxed">
+                        "By unifying AppSec and SOC on a single Runtime agent, we eliminate the 'Noise Floor' of security. This reclaimation of engineering time allows our teams to focus on innovation rather than false-positive triage."
+                    </p>
+                </div>
+                
+                <button onclick="window.print()" class="no-print w-full bg-gray-800 text-white py-4 rounded font-bold hover:bg-gray-700 transition shadow-lg">
+                    Export Executive Report (PDF)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const numApps = parseFloat(document.getElementById('numApps').value) || 0;
+            const rate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+            const cost = parseFloat(document.getElementById('platformCost').value) || 0;
+
+            const astVulns = parseFloat(document.getElementById('astVulns').value) || 0;
+            const astTime = parseFloat(document.getElementById('astTriageTime').value) || 0;
+            const legacyFp = (parseFloat(document.getElementById('legacyFp').value) || 0) / 100;
+            const contrastFp = (parseFloat(document.getElementById('contrastFp').value) || 0) / 100;
+
+            const totalVulns = numApps * astVulns;
+            const astHoursSaved = (totalVulns * (legacyFp - contrastFp)) * (astTime / 60);
+            const astSavings = astHoursSaved * rate;
+
+            const adrIncidents = parseFloat(document.getElementById('adrIncidents').value) || 0;
+            const adrLegacyTime = parseFloat(document.getElementById('adrLegacyTime').value) || 0;
+            const adrContrastTime = parseFloat(document.getElementById('adrContrastTime').value) || 0;
+
+            const adrHoursSaved = (adrIncidents * (adrLegacyTime - adrContrastTime)) / 60;
+            const adrSavings = adrHoursSaved * rate;
+
+            const totalGross = astSavings + adrSavings;
+            const netBenefit = totalGross - cost;
+            const roi = cost > 0 ? (netBenefit / cost) * 100 : 0;
+            const totalHours = astHoursSaved + adrHoursSaved;
+            const fte = totalHours / 2080;
+
+            document.getElementById('totalSavings').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(totalGross);
+            document.getElementById('netBenefit').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(netBenefit);
+            document.getElementById('roi').innerText = roi.toFixed(0) + '%';
+            document.getElementById('astHours').innerText = Math.round(astHoursSaved).toLocaleString();
+            document.getElementById('adrHours').innerText = Math.round(adrHoursSaved).toLocaleString();
+            document.getElementById('totalFte').innerText = fte.toFixed(1) + ' FTEs';
+        }
+        calculate();
+    </script>
+</body>
+</html>
