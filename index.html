@@ -88,7 +88,7 @@
                 <div class="card border-t-4 border-orange-600">
                     <h2 class="text-lg font-bold mb-3 border-b pb-1 text-orange-700">3. SOC Metrics</h2>
                     <div class="input-group">
-                        <label>Annual App-Layer Incidents/Alerts</label>
+                        <label>App-Layer Incidents/Alerts per App/Year</label>
                         <input type="number" id="adrIncidents" value="1200" oninput="calculate()">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
@@ -163,7 +163,7 @@
                     <div class="text-[10px] space-y-1.5 text-gray-600 leading-tight">
                         <p><strong>• True Vulns/App (130):</strong> Based on <em>Veracode State of Software Security (SoSS)</em> averages for active enterprise application profiles.</p>
                         <p><strong>• Triage Time (25m) & FP Rate (40%):</strong> Industry aggregate for legacy SAST/DAST tools (ref: <em>ESG/Ponemon Institute</em> AppSec productivity studies).</p>
-                        <p><strong>• SOC Incident Volume (1200):</strong> Estimated application-specific alerts for a 50-app environment (ref: <em>Verizon DBIR</em> and <em>IBM Cost of Data Breach</em> telemetry ratios).</p>
+                        <p><strong>• SOC Incident Volume Annual Per App(3000):</strong> SOC receives 4484 alerts per day, assume 50 apps, 10% of allerts are application-vulnerabilty specific (ref: <em>Vectra AI</em> State of Threat Detection.</p>
                         <p><strong>• SOC Verify (45m):</strong> Standard analyst "Mean Time to Respond" (MTTR) for uncontextualized web alerts (ref: <em>SANS Institute</em> SOC Survey results).</p>
                     </div>
                 </div>
@@ -194,7 +194,7 @@
             const adrLegacyTime = parseFloat(document.getElementById('adrLegacyTime').value) || 0;
             const adrContrastTime = parseFloat(document.getElementById('adrContrastTime').value) || 0;
 
-            const adrHoursSaved = (adrIncidents * (adrLegacyTime - adrContrastTime)) / 60;
+            const adrHoursSaved = (adrIncidents * numApps * (adrLegacyTime - adrContrastTime)) / 60;
 
             const totalGross = (astHoursSaved + adrHoursSaved) * rate;
             const netBenefit = totalGross - cost;
