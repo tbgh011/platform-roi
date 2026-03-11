@@ -45,11 +45,11 @@
                     <h2 class="text-lg font-bold mb-3 border-b pb-1">1. Organization Baseline</h2>
                     <div class="input-group">
                         <label>Total Number of Applications</label>
-                        <input type="number" id="numApps" value="50" oninput="calculate()">
+                        <input type="number" id="numApps" value="10" oninput="calculate()">
                     </div>
                     <div class="input-group">
                         <label>Average Hourly Rate (AppSec/SOC) $</label>
-                        <input type="number" id="hourlyRate" value="100" oninput="calculate()">
+                        <input type="number" id="hourlyRate" value="75" oninput="calculate()">
                     </div>
                     <div class="input-group">
                         <label>Contrast Platform Annual Cost $</label>
@@ -61,12 +61,12 @@
                     <h2 class="text-lg font-bold mb-3 border-b pb-1 text-blue-700">2. AppSec Metrics</h2>
                     <div class="input-group">
                         <label>Avg. True Vulns per App/Year</label>
-                        <input type="number" id="astVulns" value="130" oninput="calculate()">
+                        <input type="number" id="astVulns" value="120" oninput="calculate()">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="input-group">
                             <label>Mins to Triage (Legacy)</label>
-                            <input type="number" id="astTriageLegacy" value="25" oninput="calculate()">
+                            <input type="number" id="astTriageLegacy" value="60" oninput="calculate()">
                         </div>
                         <div class="input-group">
                             <label>Mins to Triage (Contrast)</label>
@@ -76,7 +76,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="input-group">
                             <label>Legacy FP Rate %</label>
-                            <input type="number" id="legacyFp" value="40" oninput="calculate()">
+                            <input type="number" id="legacyFp" value="50" oninput="calculate()">
                         </div>
                         <div class="input-group">
                             <label>Contrast FP Rate %</label>
@@ -89,12 +89,12 @@
                     <h2 class="text-lg font-bold mb-3 border-b pb-1 text-orange-700">3. SOC Metrics</h2>
                     <div class="input-group">
                         <label>App-Layer Incidents/Alerts per App/Year</label>
-                        <input type="number" id="adrIncidents" value="1200" oninput="calculate()">
+                        <input type="number" id="adrIncidents" value="120" oninput="calculate()">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="input-group">
                             <label>Mins to Verify (Legacy)</label>
-                            <input type="number" id="adrLegacyTime" value="45" oninput="calculate()">
+                            <input type="number" id="adrLegacyTime" value="180" oninput="calculate()">
                         </div>
                         <div class="input-group">
                             <label>Mins to Verify (Contrast)</label>
@@ -154,17 +154,17 @@
                         <p><strong>Avg. True Vulns:</strong> The number of unique, valid security flaws (e.g., SQLi, XSS) found in an application’s code or dependencies annually that require remediation.</p>
                         <p><strong>Minutes to Triage:</strong> The time spent by a developer or AppSec engineer to open a ticket, investigate the code, and determine if a finding is a "True Positive" or a "False Positive."</p>
                         <p><strong>App-Layer Incidents:</strong> Telemetry/alerts specifically targeting the application stack (OWASP Top 10) rather than network-level noise (e.g., port scans).</p>
-                        <p><strong>Mins to Verify/Triage:</strong> The duration from the moment a SOC alert fires to the point an analyst confirms it was a successful exploit attempt vs. a blocked/irrelevant probe.</p>
+                        <p><strong>Mins to Verify/Triage:</strong> The duration from the moment a SOC alert fires to the point analysts confirm it was a successful exploit attempt vs. a blocked/irrelevant probe.</p>
                     </div>
                 </div>
 
                 <div class="card bg-gray-50 border border-gray-200">
                     <h3 class="font-bold text-gray-800 mb-2 text-[10px] uppercase border-b pb-1">Industry Benchmarks & References</h3>
                     <div class="text-[10px] space-y-1.5 text-gray-600 leading-tight">
-                        <p><strong>• True Vulns/App (130):</strong> Based on <em>Veracode State of Software Security (SoSS)</em> averages for active enterprise application profiles.</p>
-                        <p><strong>• Triage Time (25m) & FP Rate (40%):</strong> Industry aggregate for legacy SAST/DAST tools (ref: <em>ESG/Ponemon Institute</em> AppSec productivity studies).</p>
-                        <p><strong>• SOC Incident Volume Annual Per App (3000):</strong> SOC receives 4484 alerts per day, assume 50 apps, 10% of allerts are application-vulnerabilty specific (ref: <em>Vectra AI</em> State of Threat Detection.</p>
-                        <p><strong>• SOC Verify (45m):</strong> Standard analyst "Mean Time to Respond" (MTTR) for uncontextualized web alerts (ref: <em>SANS Institute</em> SOC Survey results).</p>
+                        <p><strong>• True Vulns/App (120):</strong> Assume 10 new vulnerabilities per app every month (ref: Contrast Security benchmark estimates based on customer inputs and Veracode State of Software Security (SoSS)</em> averages for active enterprise application profiles.</p>
+                        <p><strong>• Triage Time (60mins) & FP Rate (50%):</strong> Industry aggregate for legacy SAST/DAST tools (ref: ESG/Ponemon Institute AppSec productivity studies).</p>
+                        <p><strong>• SOC Incident Volume Annual Per App (120):</strong> Takes into account repeated alerts - once an alert is seen and triaged, repeated alerts would be disregarded (ref: Contrast Security benchmark estimates based on customer inputs).</p>
+                        <p><strong>• SOC Verify (180mins):</strong> Standard analyst "Mean Time to Respond" (MTTR) for alerts based on 2-3 people working on response because incidents span across multiple technologies and layers  (ref: SANS Institute SOC Survey results).</p>
                     </div>
                 </div>
             </div>
@@ -212,4 +212,3 @@
     </script>
 </body>
 </html>
-
